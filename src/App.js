@@ -15,6 +15,8 @@ import {
   Settings,
   ChevronDown,
   Star,
+  Menu,
+  X,
 } from "lucide-react";
 
 import {
@@ -62,15 +64,31 @@ const COLORS = ["#9b8cff", "#79b8ff", "#65d6ad", "#d4d4d8"];
 
 export default function App() {
   const [theme, setTheme] = useState("dark");
+  const [openSidebar, setOpenSidebar] = useState(false);
 
   return (
     <div className={theme}>
       <div className="dashboard">
+        {/* MOBILE OVERLAY */}
+        {openSidebar && (
+          <div
+            className="overlay"
+            onClick={() => setOpenSidebar(false)}
+          ></div>
+        )}
+
         {/* SIDEBAR */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${openSidebar ? "showSidebar" : ""}`}>
           <div className="logo">
             <div className="logoCircle">B</div>
             <h2>ByeWind</h2>
+
+            <button
+              className="closeBtn"
+              onClick={() => setOpenSidebar(false)}
+            >
+              <X size={20} />
+            </button>
           </div>
 
           <div className="section">
@@ -126,6 +144,13 @@ export default function App() {
           {/* TOPBAR */}
           <div className="topbar">
             <div className="topLeft">
+              <button
+                className="menuBtn"
+                onClick={() => setOpenSidebar(true)}
+              >
+                <Menu size={22} />
+              </button>
+
               <LayoutDashboard size={18} />
               <Star size={18} />
 
@@ -159,7 +184,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* OVERVIEW */}
+          {/* HEADER */}
           <div className="overviewHeader">
             <h2>Overview</h2>
 
@@ -205,6 +230,7 @@ export default function App() {
 
           {/* CONTENT */}
           <div className="contentGrid">
+            {/* LINE CHART */}
             <div className="card">
               <div className="cardTitle">
                 <h3>Total Users</h3>
@@ -247,7 +273,7 @@ export default function App() {
               </ResponsiveContainer>
             </div>
 
-            {/* WEBSITE */}
+            {/* WEBSITE TRAFFIC */}
             <div className="card">
               <div className="cardTitle">
                 <h3>Traffic by Website</h3>
@@ -277,6 +303,7 @@ export default function App() {
 
           {/* BOTTOM */}
           <div className="bottomGrid">
+            {/* BAR CHART */}
             <div className="card">
               <div className="cardTitle">
                 <h3>Traffic by Device</h3>
@@ -303,18 +330,13 @@ export default function App() {
               </ResponsiveContainer>
             </div>
 
+            {/* PIE CHART */}
             <div className="card">
               <div className="cardTitle">
                 <h3>Traffic by Location</h3>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
+              <div className="locationWrapper">
                 <ResponsiveContainer width="50%" height={260}>
                   <PieChart>
                     <Pie
@@ -333,34 +355,15 @@ export default function App() {
                   </PieChart>
                 </ResponsiveContainer>
 
-                <div>
+                <div className="locationList">
                   {pieData.map((item, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        marginBottom: "18px",
-                      }}
-                    >
+                    <div className="locationItem" key={i}>
                       <div
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          borderRadius: "50%",
-                          background: COLORS[i],
-                        }}
+                        className="locationDot"
+                        style={{ background: COLORS[i] }}
                       ></div>
 
-                      <p
-                        style={{
-                          minWidth: "120px",
-                          color: "var(--subtext)",
-                        }}
-                      >
-                        {item.name}
-                      </p>
+                      <p>{item.name}</p>
 
                       <strong>{item.value}%</strong>
                     </div>
